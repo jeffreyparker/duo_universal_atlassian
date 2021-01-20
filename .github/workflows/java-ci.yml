@@ -19,12 +19,14 @@ jobs:
            sudo apt-get update
            sudo apt-get install -y atlassian-plugin-sdk
        - name: Build and test with Maven
-         run: atlas-mvn clean package
+         run: |
+           atlas-mvn clean package
+           cp duo_seraph_filter/target/duo-filter-* .
        - name: Upload jar artifact
          uses: actions/upload-artifact@v2
          with:
            path: |
-             duo_seraph_filter/target/duo-filter-*-jar-with-dependencies.jar
+             duo-filter-*-jar-with-dependencies.jar
              install.py
              README.md
              LICENSE
