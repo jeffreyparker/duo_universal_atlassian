@@ -23,5 +23,8 @@ jobs:
        - name: Upload jar artifact
          uses: actions/upload-artifact@v2
          with:
-           name: my-artifact
-           path: duo_seraph_filter/target/duo-filter-*
+           path: |
+             duo_seraph_filter/target/duo-filter-*-jar-with-dependencies.jar
+             install.py
+             README.md
+             LICENSE
