@@ -36,6 +36,8 @@ jobs:
              install.py
              README.md
              LICENSE
+       - name: make directory
+         run: mkdir -p /etc/usr/artifacts
        - name: Download a single artifact
          uses: actions/download-artifact@v2
          with:
