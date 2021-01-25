@@ -37,15 +37,15 @@ jobs:
              README.md
              LICENSE
        - name: make directory
-         run: mkdir -p /etc/usr/artifacts
+         run: mkdir -p ~/downloads
        - name: Download a single artifact
          uses: actions/download-artifact@v2
          with:
            name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
-           path: /etc/usr/artifacts
+           path: ~/downloads
        - name: Display structure of downloaded files
          run: ls -R
-         working-directory: /etc/usr/artifacts
+         working-directory: ~/downloads
        - name: Create Release
          id: create_release
          uses: actions/create-release@v1
@@ -63,6 +63,6 @@ jobs:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          with:
            upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-           asset_path: /etc/usr/artifacts/${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
+           asset_path: ~/downloads/${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            asset_name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            asset_content_type: application/zip
