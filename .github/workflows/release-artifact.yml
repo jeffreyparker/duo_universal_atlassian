@@ -44,7 +44,6 @@ jobs:
            name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            path: ~/downloads
        - name: Display structure of downloaded files
-         uses: actions/checkout@v2
          run: ls -R
        - name: Create Release
          id: create_release
