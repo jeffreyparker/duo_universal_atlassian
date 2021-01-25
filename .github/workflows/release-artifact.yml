@@ -36,6 +36,10 @@ jobs:
              install.py
              README.md
              LICENSE
+       - name: Download a single artifact
+         uses: actions/download-artifact@v2
+         with:
+           name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
        - name: Create Release
          id: create_release
          uses: actions/create-release@v1
