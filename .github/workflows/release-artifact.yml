@@ -13,29 +13,27 @@ jobs:
          with:
            java-version: 1.8
        # Per https://developer.atlassian.com/server/framework/atlassian-sdk/install-the-atlassian-sdk-on-a-linux-or-mac-system/
-       #- name: Install Atlassian SDK
-       #  run: |
-       #    sudo sh -c 'echo "deb https://packages.atlassian.com/debian/atlassian-sdk-deb/ stable contrib" >>/etc/apt/sources.list'
-       #    wget https://packages.atlassian.com/api/gpg/key/public
-       #    sudo apt-key add public
-       #    sudo apt-get update
-       #    sudo apt-get install -y atlassian-plugin-sdk
-       #- name: Build and test with Maven
-       #  run: |
-       #    atlas-mvn clean package
-       #    cp duo_seraph_filter/target/duo-filter-* .         
+       - name: Install Atlassian SDK
+         run: |
+           sudo sh -c 'echo "deb https://packages.atlassian.com/debian/atlassian-sdk-deb/ stable contrib" >>/etc/apt/sources.list'
+           wget https://packages.atlassian.com/api/gpg/key/public
+           sudo apt-key add public
+           sudo apt-get update
+           sudo apt-get install -y atlassian-plugin-sdk
+       - name: Build and test with Maven
+         run: atlas-mvn clean package
        - name: Get Tag version
          id: get_artifact_name
          run: echo ::set-output name=ARTIFACT_NAME::duo_universal_atlassian_plugin-${GITHUB_REF#refs/tags/}.zip
        - name: Create zip package
-         run: zip ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }} etc/duo-filter-*-jar-with-dependencies.jar install.py README.md LICENSE
+         run: zip -j ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }} duo_seraph_filter/target/duo-filter-*-jar-with-dependencies.jar install.py README.md LICENSE
            #mkdir output
            #cp etc/duo-filter-*-jar-with-dependencies.jar install.py README.md LICENSE output
-       - name: Upload jar artifact
-         uses: actions/upload-artifact@v2
-         with:
-           name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
-           path: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
+       #- name: Upload jar artifact
+       #  uses: actions/upload-artifact@v2
+       #  with:
+       #    name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
+       #    path: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
        - name: Create Release
          id: create_release
          uses: actions/create-release@v1
