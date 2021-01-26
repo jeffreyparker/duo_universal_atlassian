@@ -13,17 +13,17 @@ jobs:
          with:
            java-version: 1.8
        # Per https://developer.atlassian.com/server/framework/atlassian-sdk/install-the-atlassian-sdk-on-a-linux-or-mac-system/
-       - name: Install Atlassian SDK
-         run: |
-           sudo sh -c 'echo "deb https://packages.atlassian.com/debian/atlassian-sdk-deb/ stable contrib" >>/etc/apt/sources.list'
-           wget https://packages.atlassian.com/api/gpg/key/public
-           sudo apt-key add public
-           sudo apt-get update
-           sudo apt-get install -y atlassian-plugin-sdk
-       - name: Build and test with Maven
-         run: |
-           atlas-mvn clean package
-           cp duo_seraph_filter/target/duo-filter-* .
+       #- name: Install Atlassian SDK
+       #  run: |
+       #    sudo sh -c 'echo "deb https://packages.atlassian.com/debian/atlassian-sdk-deb/ stable contrib" >>/etc/apt/sources.list'
+       #    wget https://packages.atlassian.com/api/gpg/key/public
+       #    sudo apt-key add public
+       #    sudo apt-get update
+       #    sudo apt-get install -y atlassian-plugin-sdk
+       #- name: Build and test with Maven
+       #  run: |
+       #    atlas-mvn clean package
+       #    cp duo_seraph_filter/target/duo-filter-* .
        - name: Get Tag version
          id: get_artifact_name
          run: echo ::set-output name=ARTIFACT_NAME::duo_universal_atlassian_plugin-${GITHUB_REF#refs/tags/}.zip
@@ -32,7 +32,7 @@ jobs:
          with:
            name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            path: |
-             duo-filter-*-jar-with-dependencies.jar
+             etc/duo-filter-*-jar-with-dependencies.jar
              install.py
              README.md
              LICENSE
@@ -43,8 +43,12 @@ jobs:
          with:
            name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            path: ~/downloads
-       - name: Display structure of downloaded files
+       - name: Display structure of cwd files
          run: ls -R
+       - name: Display structure of downloaded files
+         run: ls -R /home/runner/downloads
+       - name: Display structure of home files
+         run: ls -R ~/
        - name: Create Release
          id: create_release
          uses: actions/create-release@v1
