@@ -22,18 +22,13 @@ jobs:
            sudo apt-get install -y atlassian-plugin-sdk
        - name: Build and test with Maven
          run: atlas-mvn clean package
-       - name: Get Tag version
+       - name: Get Artifact Name
+         # Extract the git tag version and use it to set a variable for artifact name
          id: get_artifact_name
          run: echo ::set-output name=ARTIFACT_NAME::duo_universal_atlassian_plugin-${GITHUB_REF#refs/tags/}.zip
        - name: Create zip package
+         # We can't use upload-artifact to create the zip because that zip isn't accessible to other actions, only via web/api download.
          run: zip -j ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }} duo_seraph_filter/target/duo-filter-*-jar-with-dependencies.jar install.py README.md LICENSE
-           #mkdir output
-           #cp etc/duo-filter-*-jar-with-dependencies.jar install.py README.md LICENSE output
-       #- name: Upload jar artifact
-       #  uses: actions/upload-artifact@v2
-       #  with:
-       #    name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
-       #    path: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
        - name: Create Release
          id: create_release
          uses: actions/create-release@v1
@@ -45,12 +40,12 @@ jobs:
            draft: true
            prerelease: false
        - name: Upload Release Asset
-         id: upload-release-asset 
+         id: upload-release-asset
          uses: actions/upload-release-asset@v1
          env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          with:
-           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+           upload_url: ${{ steps.create_release.outputs.upload_url }}
            asset_path: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            asset_name: ${{ steps.get_artifact_name.outputs.ARTIFACT_NAME }}
            asset_content_type: application/zip

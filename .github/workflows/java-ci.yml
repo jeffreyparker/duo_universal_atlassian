@@ -1,5 +1,5 @@
 name: Build and Test with Atlassian Maven
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
    build-and-test:
@@ -19,14 +19,13 @@ jobs:
            sudo apt-get update
            sudo apt-get install -y atlassian-plugin-sdk
        - name: Build and test with Maven
-         run: |
-           atlas-mvn clean package
-           cp duo_seraph_filter/target/duo-filter-* .
+         run: atlas-mvn clean package
        - name: Upload jar artifact
+         # This jar/zip isn't used for releases, just as a convenience for testing/troubleshooting
          uses: actions/upload-artifact@v2
          with:
            path: |
-             duo-filter-*-jar-with-dependencies.jar
+             duo_seraph_filter/target/duo-filter-*-jar-with-dependencies.jar
              install.py
              README.md
              LICENSE
